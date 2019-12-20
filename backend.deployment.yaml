@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: i2m-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: i2m-backend
+  template:
+    metadata:
+      labels:
+        app: i2m-backend
+    spec:
+      containers:
+        - name: i2m-backend
+          image: gcr.io/tranhuyanh267/i2m-backend:0.17
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: service-key
+              mountPath: /root/i2m-storage-credential.json
+              subPath: i2m-storage-credential.json
+          env:
+            - name: MYSQL_URL
+              value: "35.221.251.75"
+            - name: MYSQL_USERNAME
+              value: root
+            - name: MYSQL_PASSWORD
+              value: "123456"
+            - name: RABBITMQ_HOST
+              value: "35.240.130.146"
+            - name: RABBITMQ_PORT
+              value: "30069"
+            - name: RABBITMQ_USERNAME
+              value: admin
+            - name: RABBITMQ_PASSWORD
+              value: grove1234
+            - name: MAIL_USERNAME
+              value: flowershower282@gmail.com
+            - name: MAIL_PASSWORD
+              value: vannguyen2802
+            - name: GOOGLE_CLIENTID
+              value: 236035663191-2iismpr3nn134jgfquoaqnk422hjelj7.apps.googleusercontent.com
+            - name: GOOGLE_CLIENT_SECRET
+              value: ZFf4ECJi-tEywvVGQtk9dL1B
+            - name: APP_JWT_SECRET
+              value: 926D96C90030DD58429D2751AC1BDBBC
+            - name: APP_JWT_EXPIRATION
+              value: "864000000"
+            - name: CREDENTIAL_PATH
+              value: "/root/i2m-storage-credential.json"
+            - name: AUTHORIZED_REDIRECT_URI
+              value: https://i2m.locmai.dev
+      volumes:
+        - name: service-key
+          secret:
+            secretName: i2m-secret
+            items:
+              - key: i2m-storage-credential
+                path: i2m-storage-credential.json

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: i2m-frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: i2m-frontend
+  template:
+    metadata:
+      labels:
+        app: i2m-frontend
+    spec:
+      containers:
+        - name: i2m-frontend
+          image: gcr.io/tranhuyanh267/i2m-frontend:0.13
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NEXT_APP_PROXY
+              value: "http://i2m-backend-service:8080"
+            - name: OAUTH2_REDIRECT_URI
+              value: "http://35.229.251.251:3000"
